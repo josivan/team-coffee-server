@@ -3,11 +3,13 @@ package br.com.teamcofee.config;
 import static spark.Spark.get;
 import static spark.Spark.post;
 
-import spark.Response;
+import br.com.teamcofee.service.TeamCoffeeService;
 
 public class WebConfig {
+  private TeamCoffeeService service;
 
-  public WebConfig() {
+  public WebConfig(TeamCoffeeService service) {
+    this.service = service;
     this.setupRoutes();
   }
   
