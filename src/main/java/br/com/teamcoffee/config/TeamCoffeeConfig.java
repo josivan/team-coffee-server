@@ -1,4 +1,4 @@
-package br.com.teamcofee.config;
+package br.com.teamcoffee.config;
 
 public class TeamCoffeeConfig {
 

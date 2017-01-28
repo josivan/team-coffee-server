@@ -8,7 +8,7 @@
   <filter-class>spark.servlet.SparkFilter</filter-class>
   <init-param>
    <param-name>applicationClass</param-name>
-   <param-value>br.com.teamcofee.rest.TeamCoffeeServer</param-value>
+   <param-value>br.com.teamcoffee.rest.TeamCoffeeServer</param-value>
   </init-param>
  </filter>
  <filter-mapping>
