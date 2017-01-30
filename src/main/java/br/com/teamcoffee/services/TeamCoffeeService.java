@@ -1,4 +1,4 @@
-package br.com.teamcoffee.service;
+package br.com.teamcoffee.services;
 
 public class TeamCoffeeService {
 

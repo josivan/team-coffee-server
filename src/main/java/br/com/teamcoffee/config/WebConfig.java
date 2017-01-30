@@ -8,6 +8,8 @@ import org.springframework.context.support.AbstractApplicationContext;
 import com.google.gson.Gson;
 
 import br.com.teamcoffee.domain.User;
+import br.com.teamcoffee.rest.utils.ResponseError;
+import br.com.teamcoffee.rest.utils.TransactionResult;
 import br.com.teamcoffee.services.UserService;
 
 public class WebConfig {
@@ -33,9 +35,15 @@ public class WebConfig {
   
   private void setupPosts() {
     post("/user", (req, res) -> {
-      User user = gson.fromJson(req.body(), User.class);
-      this.userService.save(user);
+      User user = this.gson.fromJson(req.body(), User.class);
+      TransactionResult<User> result = this.userService.save(user);
+      
+      if (result.hasError()) {
+        ResponseError error = result.getResponseError();
+        res.status(error.getHttpCode());
+        return error;
+      }
       return user; 
-    }, gson::toJson);
+    }, this.gson::toJson);
   }
 }
