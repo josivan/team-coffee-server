@@ -28,9 +28,7 @@ public class WebConfig {
   
   private void setupGets() {
     get("/hello", (req, res) -> "Hello Team Coffee");
-    get("/user", (req, res) -> {      
-      return "{[{name: \'user\'},{name: \'user2\'}]}";
-    });
+    get("/user", (req, res) -> this.userService.findAll(), this.gson::toJson);
   }
   
   private void setupPosts() {

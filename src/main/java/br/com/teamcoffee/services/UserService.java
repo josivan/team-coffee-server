@@ -1,5 +1,7 @@
 package br.com.teamcoffee.services;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
@@ -25,5 +27,9 @@ public class UserService {
       result.setResponseError(error);
     }
     return result;
+  }
+  
+  public List<User> findAll() {
+    return this.userRepository.findAll();
   }
 }
