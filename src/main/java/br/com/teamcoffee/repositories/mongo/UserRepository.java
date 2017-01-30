@@ -1,4 +1,4 @@
-package br.com.teamcoffee.repository;
+package br.com.teamcoffee.repositories.mongo;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 

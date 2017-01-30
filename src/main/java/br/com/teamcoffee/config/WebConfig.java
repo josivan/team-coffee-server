@@ -3,20 +3,22 @@ package br.com.teamcoffee.config;
 import static spark.Spark.get;
 import static spark.Spark.post;
 
+import org.springframework.context.support.AbstractApplicationContext;
+
 import com.google.gson.Gson;
 
 import br.com.teamcoffee.domain.User;
-import br.com.teamcoffee.service.TeamCoffeeService;
+import br.com.teamcoffee.services.UserService;
 
 public class WebConfig {
-  private TeamCoffeeService service;
+  private final UserService userService;
   private Gson gson = new Gson();
 
-  public WebConfig(TeamCoffeeService service) {
-    this.service = service;
+  public WebConfig(AbstractApplicationContext springContext) {
+    this.userService = springContext.getBean(UserService.class);
     this.setupRoutes();
   }
-  
+
   private void setupRoutes() {
     setupGets();
     setupPosts();
@@ -32,7 +34,7 @@ public class WebConfig {
   private void setupPosts() {
     post("/user", (req, res) -> {
       User user = gson.fromJson(req.body(), User.class);
-      this.service.save(user);
+      this.userService.save(user);
       return user; 
     }, gson::toJson);
   }

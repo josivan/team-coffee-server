@@ -6,16 +6,15 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
 import br.com.teamcoffee.config.WebConfig;
-import br.com.teamcoffee.service.TeamCoffeeService;
 
 @Configuration
 @ComponentScan({"br.com.teamcoffee"})
-@EnableMongoRepositories("br.com.teamcoffee")
+@EnableMongoRepositories("br.com.teamcoffee.repositories.mongo")
 public class TeamCoffeeApp {  
  
   public static void main(String[] args) {
     AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext(TeamCoffeeApp.class);
-    new WebConfig(ctx.getBean(TeamCoffeeService.class));
+    new WebConfig(ctx);
     ctx.registerShutdownHook();
   }
 
