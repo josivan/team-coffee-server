@@ -32,4 +32,10 @@ public class UserService {
   public List<User> findAll() {
     return this.userRepository.findAll();
   }
+  
+  public User findOne(String id) {
+    User user = userRepository.findOne(id);
+    System.out.println(user.isValidPassword("password"));
+    return user;
+  }
 }
