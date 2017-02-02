@@ -51,11 +51,13 @@ public class User implements Serializable {
       byte[] aSalt = this.salt.getBytes();
       System.out.println("Salt -> " + this.salt);
       PBEKeySpec spec = new PBEKeySpec(password.toCharArray(), aSalt, 1024, 512);
+
       SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
       SecretKey key = skf.generateSecret(spec);
       byte[] enc = key.getEncoded();
       String nHash = toHex(enc);
-      System.out.printf("This hash:[%s] => New hash:[%s]", this.hash, nHash);
+      
+      System.out.printf("This hash:[%s] => New hash:[%s]%n", this.hash, nHash);
       return this.hash.equals(nHash);
     }
     catch (NoSuchAlgorithmException | InvalidKeySpecException e) {

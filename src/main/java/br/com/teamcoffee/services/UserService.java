@@ -34,8 +34,8 @@ public class UserService {
   }
   
   public User findOne(String id) {
-    User user = userRepository.findOne(id);
-    System.out.println(user.isValidPassword("password"));
+    User user = this.userRepository.findOne(id);
+    System.out.println(user.isValidPassword("senha"));
     return user;
   }
 }
