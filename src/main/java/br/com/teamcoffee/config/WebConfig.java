@@ -3,6 +3,8 @@ package br.com.teamcoffee.config;
 import static spark.Spark.get;
 import static spark.Spark.post;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.support.AbstractApplicationContext;
 
 import com.google.gson.Gson;
@@ -15,8 +17,9 @@ import br.com.teamcoffee.rest.utils.TransactionResult;
 import br.com.teamcoffee.services.UserService;
 
 public class WebConfig {
+  private static final Logger LOGGER = LoggerFactory.getLogger(WebConfig.class);
   private final UserService userService;
-  private final TeamCoffeeUtils tcUtil;
+  private final TeamCoffeeUtils tcUtil; 
   private Gson gson = new Gson();
 
   public WebConfig(AbstractApplicationContext springContext) {
@@ -41,9 +44,7 @@ public class WebConfig {
       String body = req.body();
       User user = this.gson.fromJson(body, User.class);
       JsonObject json = this.tcUtil.getAsJsonObject(body);
-      user.setPassword(json.get("password").getAsString());
-      
-       TransactionResult<User> result = this.userService.save(user);
+      TransactionResult<User> result = this.userService.save(user, json.get("password").getAsString());
       
       if (result.hasError()) {
         ResponseError error = result.getResponseError();
