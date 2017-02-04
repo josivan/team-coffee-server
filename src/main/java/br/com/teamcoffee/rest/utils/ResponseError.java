@@ -1,6 +1,9 @@
 package br.com.teamcoffee.rest.utils;
 
 public class ResponseError {
+  public static final ResponseError USER_NOT_FOUND = new ResponseError(401, "Usuário não encontrado.");
+  public static final ResponseError INVALID_PASSWORD = new ResponseError(401, "Senha não é válida.");
+  
   private final int httpCode;
   private final String message;
   private String exceptionMessage;

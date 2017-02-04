@@ -3,6 +3,8 @@ package br.com.teamcoffee.config;
 import static spark.Spark.get;
 import static spark.Spark.post;
 
+import java.util.Collections;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.support.AbstractApplicationContext;
@@ -40,6 +42,22 @@ public class WebConfig {
   }
   
   private void setupPosts() {
+    post("/login", (req, res) -> {
+      JsonObject json = this.tcUtil.getAsJsonObject(req.body());
+      TransactionResult<String> result = this.userService.doLogin(
+          json.get("email").getAsString(),
+          json.get("password").getAsString());
+      res.type("application/json");
+      
+      if (result.hasError()) {
+        ResponseError error = result.getResponseError();
+        res.status(error.getHttpCode());
+        return error;
+      }
+
+      return Collections.singletonMap("token", result.getEntity()); 
+    }, this.gson::toJson);
+    
     post("/user", (req, res) -> {
       String body = req.body();
       User user = this.gson.fromJson(body, User.class);
