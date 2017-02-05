@@ -1,5 +1,7 @@
 package br.com.teamcoffee.services;
 
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -10,6 +12,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.domain.Example;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
@@ -26,9 +31,11 @@ import io.jsonwebtoken.SignatureAlgorithm;
 public class UserService {
   private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
   private static final String KEY = "team-coffee";
+  
   @Autowired private UserRepository userRepository;
   @Autowired private TeamCoffeeUtils teamCoffeeUtils;
-  private Gson gson = new Gson();
+  @Autowired private Gson gson;
+  @Autowired private MongoTemplate mongoTemplate;
   
   public TransactionResult<User> save(User user, String password) {
     TransactionResult<User> result = new TransactionResult<>();
@@ -48,7 +55,9 @@ public class UserService {
   }
   
   public List<User> findAll() {
-    return this.userRepository.findAll();
+    Aggregation agg = newAggregation(User.class, project("id", "name", "email"));
+    AggregationResults<User> result = this.mongoTemplate.aggregate(agg, "users", User.class);
+    return result.getMappedResults();
   }
   
   public User findOne(String id) {

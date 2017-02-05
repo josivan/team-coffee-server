@@ -7,29 +7,28 @@ import java.util.Collections;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.support.AbstractApplicationContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import br.com.teamcoffee.domain.User;
 import br.com.teamcoffee.rest.utils.ResponseError;
+import br.com.teamcoffee.rest.utils.TeamCoffeeConstants;
 import br.com.teamcoffee.rest.utils.TeamCoffeeUtils;
 import br.com.teamcoffee.rest.utils.TransactionResult;
 import br.com.teamcoffee.services.UserService;
+import spark.servlet.SparkApplication;
 
-public class WebConfig {
-  private static final Logger LOGGER = LoggerFactory.getLogger(WebConfig.class);
-  private final UserService userService;
-  private final TeamCoffeeUtils tcUtil; 
-  private Gson gson = new Gson();
+@Component
+public class RestConfig implements SparkApplication {
+  private static final Logger LOGGER = LoggerFactory.getLogger(RestConfig.class);
 
-  public WebConfig(AbstractApplicationContext springContext) {
-    this.userService = springContext.getBean(UserService.class);
-    this.tcUtil = springContext.getBean(TeamCoffeeUtils.class);
-    this.setupRoutes();
-  }
-
+  @Autowired private Gson gson;
+  @Autowired private UserService userService;
+  @Autowired private TeamCoffeeUtils teamCoffeeUtils;
+  
   private void setupRoutes() {
     setupGets();
     setupPosts();
@@ -43,11 +42,11 @@ public class WebConfig {
   
   private void setupPosts() {
     post("/login", (req, res) -> {
-      JsonObject json = this.tcUtil.getAsJsonObject(req.body());
+      JsonObject json = this.teamCoffeeUtils.getAsJsonObject(req.body());
       TransactionResult<String> result = this.userService.doLogin(
           json.get("email").getAsString(),
           json.get("password").getAsString());
-      res.type("application/json");
+      res.type(TeamCoffeeConstants.APPLICATION_JSON);
       
       if (result.hasError()) {
         ResponseError error = result.getResponseError();
@@ -61,7 +60,7 @@ public class WebConfig {
     post("/user", (req, res) -> {
       String body = req.body();
       User user = this.gson.fromJson(body, User.class);
-      JsonObject json = this.tcUtil.getAsJsonObject(body);
+      JsonObject json = this.teamCoffeeUtils.getAsJsonObject(body);
       TransactionResult<User> result = this.userService.save(user, json.get("password").getAsString());
       
       if (result.hasError()) {
@@ -72,5 +71,10 @@ public class WebConfig {
       
       return user; 
     }, this.gson::toJson);
+  }
+
+  @Override
+  public void init() {
+    this.setupRoutes();
   }
 }
