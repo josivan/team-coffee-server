@@ -2,6 +2,9 @@ package br.com.teamcoffee.domain;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.Email;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -11,7 +14,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @TypeAlias("user")
 public class User implements Serializable {
   @Id private String id;
-  @Indexed(unique = true) private String email;
+  @NotNull @Email @Indexed(unique = true) private String email;
   private String name;
   private String hash;
   private String salt;
