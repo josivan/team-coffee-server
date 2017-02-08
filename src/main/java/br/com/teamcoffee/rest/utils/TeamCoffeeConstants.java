@@ -9,8 +9,8 @@ public interface TeamCoffeeConstants {
   }
   
   interface ErrorCode {
-    int DUPLICATED_EMAIL = 1;
-    int USER_NOT_FOUND = 2;
-    int INVALID_PASSWORD = 3;
+    String DUPLICATED_EMAIL = "duplicatedEmail";
+    String USER_NOT_FOUND = "userNotFound";
+    String INVALID_PASSWORD = "invalidPassword";
   }
 }

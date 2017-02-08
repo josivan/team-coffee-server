@@ -7,18 +7,18 @@ public class ResponseError {
       TeamCoffeeConstants.HttpErrorCode.CONFLICT, TeamCoffeeConstants.ErrorCode.INVALID_PASSWORD, "Senha não é válida.");
   
   private final int httpCode;
-  private final int errorCode;
+  private final String messageKey;
   private final String message;
   private String exceptionMessage;
   
-  public ResponseError(int httpCode, int errorCode, String message) {
+  public ResponseError(int httpCode, String messageKey, String message) {
     this.httpCode = httpCode;
-    this.errorCode = errorCode;
+    this.messageKey = messageKey;
     this.message = message;
   }
 
-  public int getErrorCode() {
-    return this.errorCode;
+  public String getMessageKey() {
+    return this.messageKey;
   }
 
   public int getHttpCode() {
